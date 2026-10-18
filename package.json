@@ -1,0 +1,50 @@
+{
+  "name": "himclean",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.14.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "prebuild": "pnpm seo:check && pnpm llms:build",
+    "build": "next build",
+    "postbuild": "tsx scripts/contrast-check.ts",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "seo:check": "tsx scripts/seo-check.ts",
+    "llms:build": "tsx scripts/build-llms-txt.ts",
+    "questions": "tsx scripts/client-questions.ts",
+    "shot": "tsx scripts/screenshots.ts",
+    "shot:demo": "tsx scripts/demo-screenshots.ts",
+    "audit:pages": "tsx scripts/audit.ts",
+    "contrast:check": "tsx scripts/contrast-check.ts"
+  },
+  "dependencies": {
+    "next": "^15.5.25",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@next/env": "15.5.25",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.20.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "axe-core": "^4.13.0",
+    "chrome-launcher": "^1.2.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.25",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "lighthouse": "^13.4.1",
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}

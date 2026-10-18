@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+
+/* Brand palette. Single definition, consumed through Tailwind tokens below. */
+:root {
+  --bg-dark: #2b2521;
+  --bg-cream: #f4efe8;
+  --gold: #d9a961;
+  --gold-soft: #e7c892;
+  /*
+   * --gold is tuned for dark backgrounds (~7:1 against --bg-dark) and reads
+   * at ~1.9:1 on --bg-cream — well under WCAG AA. This is the text-safe
+   * counterpart for cream sections: 5.5:1 against --bg-cream. Never use
+   * --gold for text on a light background, and never use this on dark.
+   */
+  --gold-on-light: #7a5a22;
+  --text-light: #ffffff;
+  --text-muted: #b9afa6;
+  --text-dark: #2b2521;
+
+  --container: 80rem; /* 1280px */
+
+  --section-y-desktop: 6rem; /* 96px */
+  --section-y-tablet: 4rem; /* 64px */
+  --section-y-mobile: 3rem; /* 48px */
+
+  /* Height of the fixed mobile call bar (components/layout/MobileCallBar.tsx),
+     kept as a token so the bar and body's bottom padding can never drift
+     apart. Its safe-area inset is added on top of this, not baked in. */
+  --callbar-h: 4rem; /* 64px */
+}
+
+/*
+ * Fluid type scale, 320px → 1440px viewport. Replaces per-breakpoint size
+ * classes (`sm:text-4xl lg:text-5xl` …) with one value that scales
+ * continuously, so there's no jump at a breakpoint and no oversized type on
+ * narrow phones. Body copy stays a fixed 16px (`text-base`) on purpose —
+ * only headings and lead paragraphs are fluid. Formula: clamp(min, min +
+ * slope*vw, max), slope computed from the min/max pair below.
+ */
+@theme inline {
+  --text-h1: clamp(1.75rem, 1.3214rem + 2.1429vw, 3.25rem); /* 28px → 52px */
+  --text-h1--line-height: 1.08;
+  --text-h2: clamp(1.5rem, 1.2143rem + 1.4286vw, 2.5rem); /* 24px → 40px */
+  --text-h2--line-height: 1.12;
+  --text-h3: clamp(1.125rem, 1.0536rem + 0.3571vw, 1.375rem); /* 18px → 22px */
+  --text-h3--line-height: 1.35;
+  --text-lead: clamp(1rem, 0.9464rem + 0.2679vw, 1.1875rem); /* 16px → 19px */
+  --text-lead--line-height: 1.65;
+
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-cream: var(--bg-cream);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-on-light: var(--gold-on-light);
+  --color-text-light: var(--text-light);
+  --color-text-muted: var(--text-muted);
+  --color-text-dark: var(--text-dark);
+
+  --font-display: var(--font-unbounded), 'Trebuchet MS', system-ui, sans-serif;
+  --font-sans: var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --spacing-section-sm: var(--section-y-mobile);
+  --spacing-section-md: var(--section-y-tablet);
+  --spacing-section-lg: var(--section-y-desktop);
+
+  --container-site: var(--container);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* A deliberate tint instead of the default flash-blue on tap; the real
+       feedback is each element's own :active state (see components). */
+    -webkit-tap-highlight-color: rgba(217, 169, 97, 0.15);
+  }
+
+  /* Room for the fixed MobileCallBar so it never covers the last block of a
+     page. Matches the bar's own height + safe-area exactly (see --callbar-h
+     and components/layout/MobileCallBar.tsx) and only applies where the bar
+     itself renders (< 768px, md:hidden there too). */
+  @media (max-width: 767px) {
+    body {
+      padding-bottom: calc(var(--callbar-h) + env(safe-area-inset-bottom));
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--gold);
+    color: var(--bg-dark);
+  }
+}
+
+/*
+ * Smooth <details> reveal with no JS. `details > .accordion-panel` keeps the
+ * answer laid out (display: grid, not the browser's default display: none
+ * for closed content) so it can be animated; the 0fr/1fr grid-template-rows
+ * trick collapses it to zero visible height instead. The answer text stays
+ * in the server HTML and in the layout at every state — invariant 4 — this
+ * only changes how the collapse looks, never whether the content exists.
+ */
+.accordion-panel {
+  display: grid !important;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
+}
+
+details[open] > .accordion-panel {
+  grid-template-rows: 1fr;
+}
+
+.accordion-panel > * {
+  overflow: hidden;
+}
+
+/* Demo mockup only (class set by app/layout.tsx under DEMO_MODE): the
+   client's reference sits on near-black, not the brand brown. Every
+   `bg-bg-dark`/`text-bg-dark` follows, since the tokens resolve through
+   this variable. Gold and muted text only gain contrast on a darker ground. */
+.demo-theme {
+  --bg-dark: #121110;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

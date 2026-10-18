@@ -1,0 +1,39 @@
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.env
+.env*.local
+# On a server the domain and verification codes live here (docs/handover.md).
+.env.production
+.vercel
+*.tsbuildinfo
+docs/screenshots/
+docs/demo-screenshots/
+docs/mobile-audit.md
+# Raw stock-photo downloads behind public/demo/*.webp — re-fetchable from the
+# URLs in docs/demo-image-credits.md, not worth carrying in git history.
+assets/originals/
+# Client's drop folder for photos. The processed inputs live in
+# assets/incoming/ (committed, descriptive names); this is just the inbox.
+photo/
+# Second drop (2026-09-29): work photos, ozone photos, review screenshots.
+# Normalised copies (reviews redacted) live in assets/incoming/.
+him/
+ozo/
+rev/
+# Generated at build time by scripts/build-llms-txt.ts; absent while draft.
+/public/llms.txt
+# Client's photo drops (2026-09-29): work photos, ozone photos, review
+# screenshots. Normalised copies live in assets/works/.
+him/
+ozo/
+rev/
+# Third drop (2026-10-08) and later dated drops from the client.
+Фото от заказчика*/
