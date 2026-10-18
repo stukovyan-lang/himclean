@@ -1,12 +1,22 @@
 import { getDemoContactChannels } from '@/content/demo/site'
+import { PhoneIcon, TelegramIcon, ViberIcon, WhatsAppIcon } from './icons'
 
-/** Same sticky mobile strip as components/layout/MobileCallBar.tsx, demo contacts. */
+const MESSENGER_ICONS: Record<string, typeof PhoneIcon> = {
+  whatsapp: WhatsAppIcon,
+  telegram: TelegramIcon,
+  viber: ViberIcon,
+}
+
+/**
+ * Sticky mobile strip: "Позвонить" plus every messenger. The client asked for
+ * Viber next to WhatsApp and Telegram (2026-10-18); three uppercase word
+ * labels don't fit beside the call button on a 320px screen, so messengers
+ * are an icon over a small label — still a full-height tap target each.
+ */
 export function DemoMobileCallBar() {
-  // Call / WhatsApp / Telegram — three actions; a fourth label (Viber) doesn't
-  // fit a 320px bar. Same rule as components/layout/MobileCallBar.tsx.
-  const channels = getDemoContactChannels().filter((channel) => channel.id !== 'viber')
+  const channels = getDemoContactChannels()
   const phone = channels.find((channel) => channel.id === 'phone')
-  const rest = channels.filter((channel) => channel.id !== 'phone')
+  const messengers = channels.filter((channel) => channel.id in MESSENGER_ICONS)
 
   return (
     <div
@@ -25,15 +35,19 @@ export function DemoMobileCallBar() {
             Позвонить
           </a>
         ) : null}
-        {rest.map((channel) => (
-          <a
-            key={channel.id}
-            href={channel.href}
-            className="flex flex-1 items-center justify-center rounded-full border border-gold/40 px-2 text-center font-display text-xs uppercase tracking-[0.08em] text-gold transition-colors active:bg-gold/10"
-          >
-            {channel.label}
-          </a>
-        ))}
+        {messengers.map((channel) => {
+          const Icon = MESSENGER_ICONS[channel.id] ?? PhoneIcon
+          return (
+            <a
+              key={channel.id}
+              href={channel.href}
+              className="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl border border-gold/40 text-gold transition-colors active:bg-gold/10"
+            >
+              <Icon aria-hidden="true" className="h-5 w-5" />
+              <span className="text-[9px] leading-none min-[360px]:text-[10px]">{channel.label}</span>
+            </a>
+          )
+        })}
       </div>
     </div>
   )

@@ -31,7 +31,9 @@ export const site: SiteConfig = siteConfigSchema.parse({
   phoneDisplay: '+375 (29) 610-28-03',
   // One number for calls, WhatsApp, Telegram and Viber (client's answer).
   whatsapp: '+375296102803',
-  telegram: '+375296102803',
+  // Username, not the number: t.me/+<phone> links only open a chat for some
+  // people even with "find me by number: everyone" set (client, 2026-10-18).
+  telegram: 'himclean1',
   viber: '+375296102803',
   // Client wrote «Zhogolev1994gmail.com» (2026-10-13) — the @ was lost in typing.
   email: 'zhogolev1994@gmail.com',
